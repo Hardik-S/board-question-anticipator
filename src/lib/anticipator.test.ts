@@ -32,4 +32,27 @@ describe('buildBoardPrep', () => {
     )
     expect(prep.posture).toBe('Bring proof, not polish')
   })
+
+  it('escalates unsupported claims even when confidence is high', () => {
+    const prep = buildBoardPrep({
+      ...syntheticBoardUpdate,
+      claims: [
+        {
+          text: 'The rollout motion is repeatable across mid-market accounts.',
+          category: 'growth',
+          confidence: 'high',
+          supportingEvidence: [],
+        },
+      ],
+    })
+
+    expect(prep.questions).toEqual([
+      expect.objectContaining({
+        severity: 'High',
+        whyItMatters:
+          'A director can challenge this as an unsupported assertion unless the team brings a backup artifact.',
+      }),
+    ])
+    expect(prep.weakClaims).toHaveLength(1)
+  })
 })

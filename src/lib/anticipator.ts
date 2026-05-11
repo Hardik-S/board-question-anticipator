@@ -48,7 +48,7 @@ export function buildBoardPrep(update: BoardUpdate): BoardPrep {
 
   const questions = update.claims.map((claim) => ({
     theme: claim.category,
-    severity: claim.confidence === 'low' ? 'High' : 'Medium',
+    severity: getQuestionSeverity(claim),
     question: questionByCategory[claim.category],
     whyItMatters: explainRisk(claim),
     backupArtifact: artifactByCategory[claim.category],
@@ -79,6 +79,12 @@ export function buildBoardPrep(update: BoardUpdate): BoardPrep {
     evidenceGaps,
     artifactChecklist,
   }
+}
+
+function getQuestionSeverity(claim: BoardClaim): AnticipatedQuestion['severity'] {
+  return claim.confidence === 'low' || claim.supportingEvidence.length === 0
+    ? 'High'
+    : 'Medium'
 }
 
 function toWeakClaim(claim: BoardClaim): WeakClaim {
