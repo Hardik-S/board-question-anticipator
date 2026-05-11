@@ -49,6 +49,7 @@ Required verification for this first slice:
 - Kept the first slice deterministic and fixture-first so reviewers can audit the assumptions without API keys or hidden model behavior.
 - Used backup artifacts as the output unit because board prep becomes useful when it tells the presenter what proof to bring.
 - Treated low-confidence and unsupported claims as weak claims; high-confidence claims still receive questions but do not automatically become repair items.
+- Escalated unsupported claims to high-severity questions even when their confidence label is high, because board risk depends on whether a director can see proof, not only on the author's confidence.
 
 ## Limitations And Next Improvements
 
