@@ -33,6 +33,14 @@ describe('buildBoardPrep', () => {
     expect(prep.posture).toBe('Bring proof, not polish')
   })
 
+  it('keeps open risks visible in the prep gap list', () => {
+    const prep = buildBoardPrep(syntheticBoardUpdate)
+
+    expect(prep.evidenceGaps).toContain(
+      'Open risk: Two pipeline deals are still procurement-dependent.',
+    )
+  })
+
   it('escalates unsupported claims even when confidence is high', () => {
     const prep = buildBoardPrep({
       ...syntheticBoardUpdate,

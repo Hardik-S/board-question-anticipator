@@ -59,6 +59,7 @@ export function buildBoardPrep(update: BoardUpdate): BoardPrep {
       .filter((metric) => metric.evidenceStatus !== 'ready')
       .map((metric) => `${metric.label}: ${metric.context}`),
     ...weakClaims.map((claim) => `Claim repair needed: ${claim.claim}`),
+    ...update.openRisks.map((risk) => `Open risk: ${risk}`),
   ]
 
   const artifactChecklist = Array.from(
