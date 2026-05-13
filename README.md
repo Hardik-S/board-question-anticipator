@@ -50,6 +50,7 @@ Required verification for this first slice:
 - Used backup artifacts as the output unit because board prep becomes useful when it tells the presenter what proof to bring.
 - Treated low-confidence and unsupported claims as weak claims; high-confidence claims still receive questions but do not automatically become repair items.
 - Escalated unsupported claims to high-severity questions even when their confidence label is high, because board risk depends on whether a director can see proof, not only on the author's confidence.
+- Added a stylesheet contract test that compares static React class names to `App.css`, because this compact portfolio app relies on plain CSS and stale selector names can silently degrade the whole reviewer surface while tests and builds still pass.
 
 ## Limitations And Next Improvements
 
