@@ -42,6 +42,9 @@ const questionByCategory: Record<BoardClaim['category'], string> = {
 }
 
 export function buildBoardPrep(update: BoardUpdate): BoardPrep {
+  const hasUnsupportedClaim = update.claims.some(
+    (claim) => claim.supportingEvidence.length === 0,
+  )
   const weakClaims = update.claims
     .filter((claim) => claim.confidence !== 'high' || claim.supportingEvidence.length === 0)
     .map(toWeakClaim)
@@ -72,7 +75,9 @@ export function buildBoardPrep(update: BoardUpdate): BoardPrep {
 
   return {
     posture:
-      weakClaims.length >= 2 ? 'Bring proof, not polish' : 'Narrative is mostly defensible',
+      hasUnsupportedClaim || weakClaims.length >= 2
+        ? 'Bring proof, not polish'
+        : 'Narrative is mostly defensible',
     executiveBrief:
       'The memo has a clear growth story, but the board will likely challenge repeatability, support-quality measurement, and margin recovery until backup artifacts are ready.',
     questions,

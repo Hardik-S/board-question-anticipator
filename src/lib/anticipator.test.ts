@@ -63,4 +63,20 @@ describe('buildBoardPrep', () => {
     ])
     expect(prep.weakClaims).toHaveLength(1)
   })
+
+  it('uses a proof-first posture when any claim has no supporting artifact', () => {
+    const prep = buildBoardPrep({
+      ...syntheticBoardUpdate,
+      claims: [
+        {
+          text: 'The rollout motion is repeatable across mid-market accounts.',
+          category: 'growth',
+          confidence: 'high',
+          supportingEvidence: [],
+        },
+      ],
+    })
+
+    expect(prep.posture).toBe('Bring proof, not polish')
+  })
 })
