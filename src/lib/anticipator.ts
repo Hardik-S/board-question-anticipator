@@ -71,8 +71,7 @@ export function buildBoardPrep(update: BoardUpdate): BoardPrep {
   const artifactChecklist = Array.from(
     new Set([
       ...questions.map((question) => question.backupArtifact),
-      'one-page risk register with owner and mitigation date',
-      'metric definition appendix showing inclusions and exclusions',
+      ...getBaselineArtifacts(update),
     ]),
   )
 
@@ -121,6 +120,17 @@ function explainRisk(claim: BoardClaim): string {
 
 function hasUsableEvidence(claim: BoardClaim): boolean {
   return claim.supportingEvidence.some((evidence) => evidence.trim().length > 0)
+}
+
+function getBaselineArtifacts(update: BoardUpdate): string[] {
+  return [
+    ...(update.openRisks.length > 0
+      ? ['one-page risk register with owner and mitigation date']
+      : []),
+    ...(update.metrics.length > 0
+      ? ['metric definition appendix showing inclusions and exclusions']
+      : []),
+  ]
 }
 
 function formatMetricGapContext(context: string): string {
