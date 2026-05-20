@@ -130,4 +130,27 @@ describe('buildBoardPrep', () => {
       'Implementation margin: No metric rationale supplied.',
     ])
   })
+
+  it('only includes baseline artifacts when the fixture has matching content', () => {
+    const prep = buildBoardPrep({
+      ...syntheticBoardUpdate,
+      metrics: [],
+      claims: [],
+      openRisks: [],
+    })
+
+    expect(prep.artifactChecklist).toEqual([])
+  })
+
+  it('keeps metric appendix without a risk register when only metrics exist', () => {
+    const prep = buildBoardPrep({
+      ...syntheticBoardUpdate,
+      claims: [],
+      openRisks: [],
+    })
+
+    expect(prep.artifactChecklist).toEqual([
+      'metric definition appendix showing inclusions and exclusions',
+    ])
+  })
 })
