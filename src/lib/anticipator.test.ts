@@ -103,4 +103,31 @@ describe('buildBoardPrep', () => {
     expect(prep.weakClaims).toHaveLength(1)
     expect(prep.posture).toBe('Bring proof, not polish')
   })
+
+  it('trims metric gap context and names missing rationale explicitly', () => {
+    const prep = buildBoardPrep({
+      ...syntheticBoardUpdate,
+      metrics: [
+        {
+          label: 'Pipeline coverage',
+          value: '3.1x',
+          context: '  Includes verbal commitments.  ',
+          evidenceStatus: 'thin',
+        },
+        {
+          label: 'Implementation margin',
+          value: 'Unknown',
+          context: '   ',
+          evidenceStatus: 'missing',
+        },
+      ],
+      claims: [],
+      openRisks: [],
+    })
+
+    expect(prep.evidenceGaps).toEqual([
+      'Pipeline coverage: Includes verbal commitments.',
+      'Implementation margin: No metric rationale supplied.',
+    ])
+  })
 })
