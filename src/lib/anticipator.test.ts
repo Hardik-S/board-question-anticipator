@@ -41,6 +41,22 @@ describe('buildBoardPrep', () => {
     )
   })
 
+  it('ignores blank open risks from imported memo fixtures', () => {
+    const prep = buildBoardPrep({
+      ...syntheticBoardUpdate,
+      metrics: [],
+      claims: [],
+      openRisks: ['  ', '\n\t', '  Services effort is unallocated.  '],
+    })
+
+    expect(prep.evidenceGaps).toEqual([
+      'Open risk: Services effort is unallocated.',
+    ])
+    expect(prep.artifactChecklist).toEqual([
+      'one-page risk register with owner and mitigation date',
+    ])
+  })
+
   it('escalates unsupported claims even when confidence is high', () => {
     const prep = buildBoardPrep({
       ...syntheticBoardUpdate,

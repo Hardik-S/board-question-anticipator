@@ -42,6 +42,7 @@ const questionByCategory: Record<BoardClaim['category'], string> = {
 }
 
 export function buildBoardPrep(update: BoardUpdate): BoardPrep {
+  const openRisks = getUsableOpenRisks(update)
   const hasUnsupportedClaim = update.claims.some(
     (claim) => !hasUsableEvidence(claim),
   )
@@ -65,13 +66,13 @@ export function buildBoardPrep(update: BoardUpdate): BoardPrep {
           `${metric.label}: ${formatMetricGapContext(metric.context)}`,
       ),
     ...weakClaims.map((claim) => `Claim repair needed: ${claim.claim}`),
-    ...update.openRisks.map((risk) => `Open risk: ${risk}`),
+    ...openRisks.map((risk) => `Open risk: ${risk}`),
   ]
 
   const artifactChecklist = Array.from(
     new Set([
       ...questions.map((question) => question.backupArtifact),
-      ...getBaselineArtifacts(update),
+      ...getBaselineArtifacts(update, openRisks),
     ]),
   )
 
@@ -122,9 +123,12 @@ function hasUsableEvidence(claim: BoardClaim): boolean {
   return claim.supportingEvidence.some((evidence) => evidence.trim().length > 0)
 }
 
-function getBaselineArtifacts(update: BoardUpdate): string[] {
+function getBaselineArtifacts(
+  update: BoardUpdate,
+  openRisks: string[],
+): string[] {
   return [
-    ...(update.openRisks.length > 0
+    ...(openRisks.length > 0
       ? ['one-page risk register with owner and mitigation date']
       : []),
     ...(update.metrics.length > 0
@@ -138,4 +142,10 @@ function formatMetricGapContext(context: string): string {
   return trimmedContext.length > 0
     ? trimmedContext
     : 'No metric rationale supplied.'
+}
+
+function getUsableOpenRisks(update: BoardUpdate): string[] {
+  return update.openRisks
+    .map((risk) => risk.trim())
+    .filter((risk) => risk.length > 0)
 }

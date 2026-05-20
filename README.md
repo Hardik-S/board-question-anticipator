@@ -56,6 +56,7 @@ Required verification for this first slice:
 - Treat whitespace-only supporting evidence as missing proof so pasted or imported memo fixtures cannot accidentally make an unsupported claim look defensible.
 - Trim metric-gap rationale text and name missing rationale explicitly so imported or pasted memo fixtures do not render blank evidence-gap explanations.
 - Scope baseline backup artifacts to fixture content so empty or narrow scenarios do not ask reviewers to prepare irrelevant risk or metric appendices.
+- Trim open-risk text and ignore blank imported risks so placeholder rows do not create empty evidence gaps or unnecessary risk-register requests.
 
 ## Limitations And Next Improvements
 
