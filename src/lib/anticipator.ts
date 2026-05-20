@@ -43,10 +43,10 @@ const questionByCategory: Record<BoardClaim['category'], string> = {
 
 export function buildBoardPrep(update: BoardUpdate): BoardPrep {
   const hasUnsupportedClaim = update.claims.some(
-    (claim) => claim.supportingEvidence.length === 0,
+    (claim) => !hasUsableEvidence(claim),
   )
   const weakClaims = update.claims
-    .filter((claim) => claim.confidence !== 'high' || claim.supportingEvidence.length === 0)
+    .filter((claim) => claim.confidence !== 'high' || !hasUsableEvidence(claim))
     .map(toWeakClaim)
 
   const questions = update.claims.map((claim) => ({
@@ -88,13 +88,13 @@ export function buildBoardPrep(update: BoardUpdate): BoardPrep {
 }
 
 function getQuestionSeverity(claim: BoardClaim): AnticipatedQuestion['severity'] {
-  return claim.confidence === 'low' || claim.supportingEvidence.length === 0
+  return claim.confidence === 'low' || !hasUsableEvidence(claim)
     ? 'High'
     : 'Medium'
 }
 
 function toWeakClaim(claim: BoardClaim): WeakClaim {
-  const noEvidence = claim.supportingEvidence.length === 0
+  const noEvidence = !hasUsableEvidence(claim)
   return {
     claim: claim.text,
     reason: noEvidence
@@ -105,7 +105,7 @@ function toWeakClaim(claim: BoardClaim): WeakClaim {
 }
 
 function explainRisk(claim: BoardClaim): string {
-  if (claim.supportingEvidence.length === 0) {
+  if (!hasUsableEvidence(claim)) {
     return 'A director can challenge this as an unsupported assertion unless the team brings a backup artifact.'
   }
 
@@ -114,4 +114,8 @@ function explainRisk(claim: BoardClaim): string {
   }
 
   return 'This is directionally credible, but the room will still ask what could falsify the claim.'
+}
+
+function hasUsableEvidence(claim: BoardClaim): boolean {
+  return claim.supportingEvidence.some((evidence) => evidence.trim().length > 0)
 }

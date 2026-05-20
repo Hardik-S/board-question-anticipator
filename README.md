@@ -53,6 +53,7 @@ Required verification for this first slice:
 - Kept the overall prep posture proof-first when any claim lacks a supporting artifact, because one unsupported assertion is enough to change how an operator should enter a board discussion.
 - Added a stylesheet contract test that compares static React class names to `App.css`, because this compact portfolio app relies on plain CSS and stale selector names can silently degrade the whole reviewer surface while tests and builds still pass.
 - Surfaced fixture open risks in the evidence-gap list so unresolved risks do not disappear behind otherwise valid metric and claim checks.
+- Treat whitespace-only supporting evidence as missing proof so pasted or imported memo fixtures cannot accidentally make an unsupported claim look defensible.
 
 ## Limitations And Next Improvements
 

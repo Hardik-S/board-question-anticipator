@@ -79,4 +79,28 @@ describe('buildBoardPrep', () => {
 
     expect(prep.posture).toBe('Bring proof, not polish')
   })
+
+  it('treats whitespace-only supporting evidence as missing proof', () => {
+    const prep = buildBoardPrep({
+      ...syntheticBoardUpdate,
+      claims: [
+        {
+          text: 'The rollout motion is repeatable across mid-market accounts.',
+          category: 'growth',
+          confidence: 'high',
+          supportingEvidence: ['   ', '\n\t'],
+        },
+      ],
+    })
+
+    expect(prep.questions[0]).toEqual(
+      expect.objectContaining({
+        severity: 'High',
+        whyItMatters:
+          'A director can challenge this as an unsupported assertion unless the team brings a backup artifact.',
+      }),
+    )
+    expect(prep.weakClaims).toHaveLength(1)
+    expect(prep.posture).toBe('Bring proof, not polish')
+  })
 })
