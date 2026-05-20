@@ -54,6 +54,7 @@ Required verification for this first slice:
 - Added a stylesheet contract test that compares static React class names to `App.css`, because this compact portfolio app relies on plain CSS and stale selector names can silently degrade the whole reviewer surface while tests and builds still pass.
 - Surfaced fixture open risks in the evidence-gap list so unresolved risks do not disappear behind otherwise valid metric and claim checks.
 - Treat whitespace-only supporting evidence as missing proof so pasted or imported memo fixtures cannot accidentally make an unsupported claim look defensible.
+- Trim metric-gap rationale text and name missing rationale explicitly so imported or pasted memo fixtures do not render blank evidence-gap explanations.
 
 ## Limitations And Next Improvements
 

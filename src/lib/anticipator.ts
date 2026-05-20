@@ -60,7 +60,10 @@ export function buildBoardPrep(update: BoardUpdate): BoardPrep {
   const evidenceGaps = [
     ...update.metrics
       .filter((metric) => metric.evidenceStatus !== 'ready')
-      .map((metric) => `${metric.label}: ${metric.context}`),
+      .map(
+        (metric) =>
+          `${metric.label}: ${formatMetricGapContext(metric.context)}`,
+      ),
     ...weakClaims.map((claim) => `Claim repair needed: ${claim.claim}`),
     ...update.openRisks.map((risk) => `Open risk: ${risk}`),
   ]
@@ -118,4 +121,11 @@ function explainRisk(claim: BoardClaim): string {
 
 function hasUsableEvidence(claim: BoardClaim): boolean {
   return claim.supportingEvidence.some((evidence) => evidence.trim().length > 0)
+}
+
+function formatMetricGapContext(context: string): string {
+  const trimmedContext = context.trim()
+  return trimmedContext.length > 0
+    ? trimmedContext
+    : 'No metric rationale supplied.'
 }
