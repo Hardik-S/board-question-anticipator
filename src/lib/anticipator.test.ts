@@ -279,6 +279,34 @@ describe('buildBoardPrep', () => {
     ])
   })
 
+  it('flags placeholder metric values as evidence gaps', () => {
+    const prep = buildBoardPrep({
+      ...syntheticBoardUpdate,
+      metrics: [
+        {
+          label: 'Implementation margin',
+          value: 'TBD',
+          context: 'Finance marked the metric as ready.',
+          evidenceStatus: 'ready',
+        },
+        {
+          label: 'Expansion pipeline',
+          value: 'n/a',
+          context: 'Sales marked the metric as ready.',
+          evidenceStatus: 'ready',
+        },
+      ],
+      claims: [],
+      openRisks: [],
+    })
+
+    expect(prep.evidenceGaps).toEqual([
+      'Metric value missing: Implementation margin',
+      'Metric value missing: Expansion pipeline',
+    ])
+    expect(prep.posture).toBe('Bring proof, not polish')
+  })
+
   it('only includes baseline artifacts when the fixture has matching content', () => {
     const prep = buildBoardPrep({
       ...syntheticBoardUpdate,
