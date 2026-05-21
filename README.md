@@ -58,6 +58,7 @@ Required verification for this first slice:
 - Scope baseline backup artifacts to fixture content so empty or narrow scenarios do not ask reviewers to prepare irrelevant risk or metric appendices.
 - Trim open-risk text and ignore blank imported risks so placeholder rows do not create empty evidence gaps or unnecessary risk-register requests.
 - Trim metric labels and ignore blank imported metric rows so spreadsheet placeholders do not create unnamed evidence gaps or unnecessary metric appendices.
+- Trim claim text and ignore blank imported claim rows so paste/import placeholders do not create phantom board questions, weak-claim repairs, or backup artifacts.
 
 ## Limitations And Next Improvements
 
