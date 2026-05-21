@@ -186,6 +186,27 @@ describe('buildBoardPrep', () => {
     ])
   })
 
+  it('uses a proof-first posture when metric evidence is missing without claims', () => {
+    const prep = buildBoardPrep({
+      ...syntheticBoardUpdate,
+      metrics: [
+        {
+          label: 'Pipeline coverage',
+          value: '3.1x',
+          context: 'Needs signed-stage export.',
+          evidenceStatus: 'missing',
+        },
+      ],
+      claims: [],
+      openRisks: [],
+    })
+
+    expect(prep.evidenceGaps).toEqual([
+      'Pipeline coverage: Needs signed-stage export.',
+    ])
+    expect(prep.posture).toBe('Bring proof, not polish')
+  })
+
   it('ignores blank imported metric labels when building gap and artifact lists', () => {
     const prep = buildBoardPrep({
       ...syntheticBoardUpdate,
