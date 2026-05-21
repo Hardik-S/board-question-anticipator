@@ -1,4 +1,4 @@
-import type { BoardClaim, BoardUpdate } from '../data/boardUpdate'
+import type { BoardClaim, BoardMetric, BoardUpdate } from '../data/boardUpdate'
 
 export type AnticipatedQuestion = {
   theme: string
@@ -43,6 +43,7 @@ const questionByCategory: Record<BoardClaim['category'], string> = {
 
 export function buildBoardPrep(update: BoardUpdate): BoardPrep {
   const openRisks = getUsableOpenRisks(update)
+  const metrics = getUsableMetrics(update)
   const hasUnsupportedClaim = update.claims.some(
     (claim) => !hasUsableEvidence(claim),
   )
@@ -59,7 +60,7 @@ export function buildBoardPrep(update: BoardUpdate): BoardPrep {
   })) satisfies AnticipatedQuestion[]
 
   const evidenceGaps = [
-    ...update.metrics
+    ...metrics
       .filter((metric) => metric.evidenceStatus !== 'ready')
       .map(
         (metric) =>
@@ -72,7 +73,7 @@ export function buildBoardPrep(update: BoardUpdate): BoardPrep {
   const artifactChecklist = Array.from(
     new Set([
       ...questions.map((question) => question.backupArtifact),
-      ...getBaselineArtifacts(update, openRisks),
+      ...getBaselineArtifacts(metrics, openRisks),
     ]),
   )
 
@@ -124,14 +125,14 @@ function hasUsableEvidence(claim: BoardClaim): boolean {
 }
 
 function getBaselineArtifacts(
-  update: BoardUpdate,
+  metrics: BoardMetric[],
   openRisks: string[],
 ): string[] {
   return [
     ...(openRisks.length > 0
       ? ['one-page risk register with owner and mitigation date']
       : []),
-    ...(update.metrics.length > 0
+    ...(metrics.length > 0
       ? ['metric definition appendix showing inclusions and exclusions']
       : []),
   ]
@@ -148,4 +149,13 @@ function getUsableOpenRisks(update: BoardUpdate): string[] {
   return update.openRisks
     .map((risk) => risk.trim())
     .filter((risk) => risk.length > 0)
+}
+
+function getUsableMetrics(update: BoardUpdate): BoardMetric[] {
+  return update.metrics
+    .map((metric) => ({
+      ...metric,
+      label: metric.label.trim(),
+    }))
+    .filter((metric) => metric.label.length > 0)
 }
