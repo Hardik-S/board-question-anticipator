@@ -46,6 +46,9 @@ export function buildBoardPrep(update: BoardUpdate): BoardPrep {
   const metrics = getUsableMetrics(update)
   const claims = getUsableClaims(update)
   const hasUnsupportedClaim = claims.some((claim) => !hasUsableEvidence(claim))
+  const hasMetricEvidenceGap = metrics.some(
+    (metric) => metric.evidenceStatus !== 'ready',
+  )
   const weakClaims = claims
     .filter((claim) => claim.confidence !== 'high' || !hasUsableEvidence(claim))
     .map(toWeakClaim)
@@ -78,7 +81,7 @@ export function buildBoardPrep(update: BoardUpdate): BoardPrep {
 
   return {
     posture:
-      hasUnsupportedClaim || weakClaims.length >= 2
+      hasUnsupportedClaim || hasMetricEvidenceGap || weakClaims.length >= 2
         ? 'Bring proof, not polish'
         : 'Narrative is mostly defensible',
     executiveBrief:
