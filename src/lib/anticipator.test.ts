@@ -255,6 +255,30 @@ describe('buildBoardPrep', () => {
     expect(prep.artifactChecklist).toEqual([])
   })
 
+  it('flags named metrics with blank values as evidence gaps', () => {
+    const prep = buildBoardPrep({
+      ...syntheticBoardUpdate,
+      metrics: [
+        {
+          label: '  Renewal drag  ',
+          value: '   ',
+          context: 'Finance marked the metric as ready.',
+          evidenceStatus: 'ready',
+        },
+      ],
+      claims: [],
+      openRisks: [],
+    })
+
+    expect(prep.evidenceGaps).toEqual([
+      'Metric value missing: Renewal drag',
+    ])
+    expect(prep.posture).toBe('Bring proof, not polish')
+    expect(prep.artifactChecklist).toEqual([
+      'metric definition appendix showing inclusions and exclusions',
+    ])
+  })
+
   it('only includes baseline artifacts when the fixture has matching content', () => {
     const prep = buildBoardPrep({
       ...syntheticBoardUpdate,
