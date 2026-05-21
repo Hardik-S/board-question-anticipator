@@ -41,6 +41,15 @@ const questionByCategory: Record<BoardClaim['category'], string> = {
     'What proof shows standardization improves margin instead of hiding services cost?',
 }
 
+const missingMetricValuePlaceholders = new Set([
+  'n/a',
+  'na',
+  'pending',
+  'tbd',
+  'to be determined',
+  'unknown',
+])
+
 export function buildBoardPrep(update: BoardUpdate): BoardPrep {
   const openRisks = getUsableOpenRisks(update)
   const metrics = getUsableMetrics(update)
@@ -70,7 +79,10 @@ export function buildBoardPrep(update: BoardUpdate): BoardPrep {
           `${metric.label}: ${formatMetricGapContext(metric.context)}`,
       ),
     ...metrics
-      .filter(hasMissingMetricValue)
+      .filter(
+        (metric) =>
+          metric.evidenceStatus === 'ready' && hasMissingMetricValue(metric),
+      )
       .map((metric) => `Metric value missing: ${metric.label}`),
     ...weakClaims.map((claim) => `Claim repair needed: ${claim.claim}`),
     ...openRisks.map((risk) => `Open risk: ${risk}`),
@@ -131,7 +143,11 @@ function hasUsableEvidence(claim: BoardClaim): boolean {
 }
 
 function hasMissingMetricValue(metric: BoardMetric): boolean {
-  return metric.value.trim().length === 0
+  const normalizedValue = metric.value.trim().toLowerCase().replace(/\s+/g, ' ')
+  return (
+    normalizedValue.length === 0 ||
+    missingMetricValuePlaceholders.has(normalizedValue)
+  )
 }
 
 function getBaselineArtifacts(

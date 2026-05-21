@@ -60,6 +60,7 @@ Required verification for this first slice:
 - Trim open-risk text and ignore blank imported risks so placeholder rows do not create empty evidence gaps or unnecessary risk-register requests.
 - Trim metric labels and ignore blank imported metric rows so spreadsheet placeholders do not create unnamed evidence gaps or unnecessary metric appendices.
 - Flag named metrics with blank values as evidence gaps even when the incoming evidence status says ready, because an empty KPI value is not defensible board backup.
+- Treat placeholder metric values such as `TBD`, `Unknown`, and `N/A` as missing values, because a board packet still needs the real KPI backup even when an import row says the metric is ready.
 - Trim claim text and ignore blank imported claim rows so paste/import placeholders do not create phantom board questions, weak-claim repairs, or backup artifacts.
 
 ## Limitations And Next Improvements
