@@ -147,6 +147,54 @@ describe('buildBoardPrep', () => {
     ])
   })
 
+  it('ignores blank imported metric labels when building gap and artifact lists', () => {
+    const prep = buildBoardPrep({
+      ...syntheticBoardUpdate,
+      metrics: [
+        {
+          label: '  ',
+          value: 'Unknown',
+          context: '  Spreadsheet row left blank during import.  ',
+          evidenceStatus: 'missing',
+        },
+        {
+          label: '  Renewal drag  ',
+          value: '-4%',
+          context: '  Needs logo-level bridge.  ',
+          evidenceStatus: 'thin',
+        },
+      ],
+      claims: [],
+      openRisks: [],
+    })
+
+    expect(prep.evidenceGaps).toEqual([
+      'Renewal drag: Needs logo-level bridge.',
+    ])
+    expect(prep.artifactChecklist).toEqual([
+      'metric definition appendix showing inclusions and exclusions',
+    ])
+  })
+
+  it('does not request a metric appendix for blank-only imported metric rows', () => {
+    const prep = buildBoardPrep({
+      ...syntheticBoardUpdate,
+      metrics: [
+        {
+          label: '  ',
+          value: 'Unknown',
+          context: '  Spreadsheet row left blank during import.  ',
+          evidenceStatus: 'missing',
+        },
+      ],
+      claims: [],
+      openRisks: [],
+    })
+
+    expect(prep.evidenceGaps).toEqual([])
+    expect(prep.artifactChecklist).toEqual([])
+  })
+
   it('only includes baseline artifacts when the fixture has matching content', () => {
     const prep = buildBoardPrep({
       ...syntheticBoardUpdate,

@@ -57,6 +57,7 @@ Required verification for this first slice:
 - Trim metric-gap rationale text and name missing rationale explicitly so imported or pasted memo fixtures do not render blank evidence-gap explanations.
 - Scope baseline backup artifacts to fixture content so empty or narrow scenarios do not ask reviewers to prepare irrelevant risk or metric appendices.
 - Trim open-risk text and ignore blank imported risks so placeholder rows do not create empty evidence gaps or unnecessary risk-register requests.
+- Trim metric labels and ignore blank imported metric rows so spreadsheet placeholders do not create unnamed evidence gaps or unnecessary metric appendices.
 
 ## Limitations And Next Improvements
 
