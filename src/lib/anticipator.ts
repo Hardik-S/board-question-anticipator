@@ -47,7 +47,8 @@ export function buildBoardPrep(update: BoardUpdate): BoardPrep {
   const claims = getUsableClaims(update)
   const hasUnsupportedClaim = claims.some((claim) => !hasUsableEvidence(claim))
   const hasMetricEvidenceGap = metrics.some(
-    (metric) => metric.evidenceStatus !== 'ready',
+    (metric) =>
+      metric.evidenceStatus !== 'ready' || hasMissingMetricValue(metric),
   )
   const weakClaims = claims
     .filter((claim) => claim.confidence !== 'high' || !hasUsableEvidence(claim))
@@ -68,6 +69,9 @@ export function buildBoardPrep(update: BoardUpdate): BoardPrep {
         (metric) =>
           `${metric.label}: ${formatMetricGapContext(metric.context)}`,
       ),
+    ...metrics
+      .filter(hasMissingMetricValue)
+      .map((metric) => `Metric value missing: ${metric.label}`),
     ...weakClaims.map((claim) => `Claim repair needed: ${claim.claim}`),
     ...openRisks.map((risk) => `Open risk: ${risk}`),
   ]
@@ -124,6 +128,10 @@ function explainRisk(claim: BoardClaim): string {
 
 function hasUsableEvidence(claim: BoardClaim): boolean {
   return claim.supportingEvidence.some((evidence) => evidence.trim().length > 0)
+}
+
+function hasMissingMetricValue(metric: BoardMetric): boolean {
+  return metric.value.trim().length === 0
 }
 
 function getBaselineArtifacts(
