@@ -120,6 +120,45 @@ describe('buildBoardPrep', () => {
     expect(prep.posture).toBe('Bring proof, not polish')
   })
 
+  it('ignores blank imported claim rows before building questions and artifacts', () => {
+    const prep = buildBoardPrep({
+      ...syntheticBoardUpdate,
+      metrics: [],
+      claims: [
+        {
+          text: '  ',
+          category: 'growth',
+          confidence: 'low',
+          supportingEvidence: [],
+        },
+        {
+          text: '  Expansion pull is visible in renewal calls.  ',
+          category: 'retention',
+          confidence: 'medium',
+          supportingEvidence: ['  CRM note excerpt  '],
+        },
+      ],
+      openRisks: [],
+    })
+
+    expect(prep.questions).toHaveLength(1)
+    expect(prep.questions[0]).toEqual(
+      expect.objectContaining({
+        theme: 'retention',
+        backupArtifact: 'cohort expansion bridge with logo-level notes',
+      }),
+    )
+    expect(prep.weakClaims.map((claim) => claim.claim)).toEqual([
+      'Expansion pull is visible in renewal calls.',
+    ])
+    expect(prep.evidenceGaps).toEqual([
+      'Claim repair needed: Expansion pull is visible in renewal calls.',
+    ])
+    expect(prep.artifactChecklist).toEqual([
+      'cohort expansion bridge with logo-level notes',
+    ])
+  })
+
   it('trims metric gap context and names missing rationale explicitly', () => {
     const prep = buildBoardPrep({
       ...syntheticBoardUpdate,

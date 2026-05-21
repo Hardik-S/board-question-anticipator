@@ -44,14 +44,13 @@ const questionByCategory: Record<BoardClaim['category'], string> = {
 export function buildBoardPrep(update: BoardUpdate): BoardPrep {
   const openRisks = getUsableOpenRisks(update)
   const metrics = getUsableMetrics(update)
-  const hasUnsupportedClaim = update.claims.some(
-    (claim) => !hasUsableEvidence(claim),
-  )
-  const weakClaims = update.claims
+  const claims = getUsableClaims(update)
+  const hasUnsupportedClaim = claims.some((claim) => !hasUsableEvidence(claim))
+  const weakClaims = claims
     .filter((claim) => claim.confidence !== 'high' || !hasUsableEvidence(claim))
     .map(toWeakClaim)
 
-  const questions = update.claims.map((claim) => ({
+  const questions = claims.map((claim) => ({
     theme: claim.category,
     severity: getQuestionSeverity(claim),
     question: questionByCategory[claim.category],
@@ -149,6 +148,15 @@ function getUsableOpenRisks(update: BoardUpdate): string[] {
   return update.openRisks
     .map((risk) => risk.trim())
     .filter((risk) => risk.length > 0)
+}
+
+function getUsableClaims(update: BoardUpdate): BoardClaim[] {
+  return update.claims
+    .map((claim) => ({
+      ...claim,
+      text: claim.text.trim(),
+    }))
+    .filter((claim) => claim.text.length > 0)
 }
 
 function getUsableMetrics(update: BoardUpdate): BoardMetric[] {
