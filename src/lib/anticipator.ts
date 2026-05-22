@@ -41,7 +41,7 @@ const questionByCategory: Record<BoardClaim['category'], string> = {
     'What proof shows standardization improves margin instead of hiding services cost?',
 }
 
-const missingMetricValuePlaceholders = new Set([
+const missingValuePlaceholders = new Set([
   'n/a',
   'na',
   'pending',
@@ -139,15 +139,18 @@ function explainRisk(claim: BoardClaim): string {
 }
 
 function hasUsableEvidence(claim: BoardClaim): boolean {
-  return claim.supportingEvidence.some((evidence) => evidence.trim().length > 0)
+  return claim.supportingEvidence.some(
+    (evidence) => !isMissingValuePlaceholder(evidence),
+  )
 }
 
 function hasMissingMetricValue(metric: BoardMetric): boolean {
-  const normalizedValue = metric.value.trim().toLowerCase().replace(/\s+/g, ' ')
-  return (
-    normalizedValue.length === 0 ||
-    missingMetricValuePlaceholders.has(normalizedValue)
-  )
+  return isMissingValuePlaceholder(metric.value)
+}
+
+function isMissingValuePlaceholder(value: string): boolean {
+  const normalizedValue = value.trim().toLowerCase().replace(/\s+/g, ' ')
+  return normalizedValue.length === 0 || missingValuePlaceholders.has(normalizedValue)
 }
 
 function getBaselineArtifacts(
