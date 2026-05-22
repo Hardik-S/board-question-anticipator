@@ -206,6 +206,47 @@ describe('buildBoardPrep', () => {
     ])
   })
 
+  it('ignores placeholder imported claim rows before building questions and artifacts', () => {
+    const prep = buildBoardPrep({
+      ...syntheticBoardUpdate,
+      metrics: [],
+      claims: [
+        {
+          text: 'TBD',
+          category: 'growth',
+          confidence: 'low',
+          supportingEvidence: [],
+        },
+        {
+          text: ' n/a ',
+          category: 'finance',
+          confidence: 'low',
+          supportingEvidence: [],
+        },
+        {
+          text: '  Expansion pull is visible in renewal calls.  ',
+          category: 'retention',
+          confidence: 'high',
+          supportingEvidence: ['CRM note excerpt'],
+        },
+      ],
+      openRisks: [],
+    })
+
+    expect(prep.questions).toHaveLength(1)
+    expect(prep.questions[0]).toEqual(
+      expect.objectContaining({
+        theme: 'retention',
+        backupArtifact: 'cohort expansion bridge with logo-level notes',
+      }),
+    )
+    expect(prep.weakClaims).toEqual([])
+    expect(prep.evidenceGaps).toEqual([])
+    expect(prep.artifactChecklist).toEqual([
+      'cohort expansion bridge with logo-level notes',
+    ])
+  })
+
   it('trims metric gap context and names missing rationale explicitly', () => {
     const prep = buildBoardPrep({
       ...syntheticBoardUpdate,
