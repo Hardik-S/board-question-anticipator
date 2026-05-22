@@ -58,6 +58,7 @@ Required verification for this first slice:
 - Trim metric-gap rationale text and name missing rationale explicitly so imported or pasted memo fixtures do not render blank evidence-gap explanations.
 - Scope baseline backup artifacts to fixture content so empty or narrow scenarios do not ask reviewers to prepare irrelevant risk or metric appendices.
 - Trim open-risk text and ignore blank imported risks so placeholder rows do not create empty evidence gaps or unnecessary risk-register requests.
+- Ignore placeholder open-risk rows such as `TBD` and `N/A` so import scaffolding does not create phantom risk-register work.
 - Trim metric labels and ignore blank imported metric rows so spreadsheet placeholders do not create unnamed evidence gaps or unnecessary metric appendices.
 - Flag named metrics with blank values as evidence gaps even when the incoming evidence status says ready, because an empty KPI value is not defensible board backup.
 - Treat placeholder metric values such as `TBD`, `Unknown`, and `N/A` as missing values, because a board packet still needs the real KPI backup even when an import row says the metric is ready.
