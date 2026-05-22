@@ -64,6 +64,7 @@ Required verification for this first slice:
 - Treat placeholder metric values such as `TBD`, `Unknown`, and `N/A` as missing values, because a board packet still needs the real KPI backup even when an import row says the metric is ready.
 - Treat placeholder claim evidence such as `TBD` and `N/A` as missing proof, because a high-confidence statement still needs a cited backup artifact before board review.
 - Trim claim text and ignore blank imported claim rows so paste/import placeholders do not create phantom board questions, weak-claim repairs, or backup artifacts.
+- Ignore placeholder claim text such as `TBD` and `N/A` for the same reason; spreadsheet scaffolding should not become a board question.
 
 ## Limitations And Next Improvements
 

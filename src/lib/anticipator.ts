@@ -186,7 +186,7 @@ function getUsableClaims(update: BoardUpdate): BoardClaim[] {
       ...claim,
       text: claim.text.trim(),
     }))
-    .filter((claim) => claim.text.length > 0)
+    .filter((claim) => !isMissingValuePlaceholder(claim.text))
 }
 
 function getUsableMetrics(update: BoardUpdate): BoardMetric[] {
