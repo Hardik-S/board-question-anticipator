@@ -120,6 +120,37 @@ describe('buildBoardPrep', () => {
     expect(prep.posture).toBe('Bring proof, not polish')
   })
 
+  it('treats placeholder supporting evidence as missing proof', () => {
+    const prep = buildBoardPrep({
+      ...syntheticBoardUpdate,
+      metrics: [],
+      claims: [
+        {
+          text: 'The onboarding redesign permanently lowered support load.',
+          category: 'execution',
+          confidence: 'high',
+          supportingEvidence: ['TBD', ' n/a '],
+        },
+      ],
+      openRisks: [],
+    })
+
+    expect(prep.questions[0]).toEqual(
+      expect.objectContaining({
+        severity: 'High',
+        whyItMatters:
+          'A director can challenge this as an unsupported assertion unless the team brings a backup artifact.',
+      }),
+    )
+    expect(prep.weakClaims).toEqual([
+      expect.objectContaining({
+        claim: 'The onboarding redesign permanently lowered support load.',
+        reason: 'The memo asserts this without a cited artifact.',
+      }),
+    ])
+    expect(prep.posture).toBe('Bring proof, not polish')
+  })
+
   it('ignores blank imported claim rows before building questions and artifacts', () => {
     const prep = buildBoardPrep({
       ...syntheticBoardUpdate,
