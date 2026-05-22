@@ -177,7 +177,7 @@ function formatMetricGapContext(context: string): string {
 function getUsableOpenRisks(update: BoardUpdate): string[] {
   return update.openRisks
     .map((risk) => risk.trim())
-    .filter((risk) => risk.length > 0)
+    .filter((risk) => !isMissingValuePlaceholder(risk))
 }
 
 function getUsableClaims(update: BoardUpdate): BoardClaim[] {
